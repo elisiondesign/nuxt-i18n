@@ -26,8 +26,12 @@ middleware['i18n'] = async ({ app, req, res, route, store, redirect, isHMR }) =>
   let locale = app.i18n.locale || app.i18n.defaultLocale || null
 
   // Handle root path redirect
-  const rootRedirect = '<%= options.rootRedirect %>'
+  const rootRedirect = <%= JSON.stringify(options.rootRedirect) %>
   if (route.path === '/' && rootRedirect) {
+    if (rootRedirect.path && rootRedirect.status) {
+      redirect(rootRedirect.status, '/' + rootRedirect.path, route.query)
+    }
+
     redirect('/' + rootRedirect, route.query)
     return
   }
